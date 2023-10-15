@@ -55,7 +55,7 @@ Poleg lepih grafov funkcij etc. se tu prvič srečaš z dejstvom, da lahko tudi 
 Vseeno pa priporočam, da si najprej sam poskusiš rešiti nalogo. As always za vprašanja sem na voljo.
 
 
-* [**Poročilo DN3**]({% link fmf-pdf/year3/mfp/Marko_Urbanč_03.pdf %})
+* [**Poročilo DN3**](https://pengu5055.github.io/fmf-pdf/year3/mfp/Marko_Urbanč_03.pdf)
 * [**Source repozitorij DN3**](https://github.com/pengu5055/mfp03)
 
 Priznam, da zna biti source repozitorij nekoliko kaotičen. Over time sem se naučil boljše prakse. Zdi se mi, da je tole glavni `.py` file.
