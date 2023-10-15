@@ -1,0 +1,21 @@
+    for k in range(1, n):
+        alpha = -np.sign(a[k + 1][k]) * np.sqrt(np.sum([(a[i][k]) ** 2 for i in range(k + 1, dim - 1)]))  # dim ali n
+        r = np.sqrt(0.5 * (alpha ** 2 - a[k + 1][k] * alpha))
+        v = []
+        for l in range(n):
+            if l < k:
+                v.append(0)
+            elif l == k:
+                v.append((a[k + 1][k] - alpha) / (2 * r))
+            elif l > k:
+                v.append((a[l][k]) / (2 * r))
+            else:
+                raise IndexError("Shit's fucky yo!")
+        vect = np.array(v)
+        P = np.eye(n) - 2 * np.outer(vect, vect)
+        print("P:\n{}".format(P))
+        a = np.matmul(P.T, np.matmul(a, P))
+        print(a)
+    return a
+
+# USING MATPLOTLIB 3.2.1

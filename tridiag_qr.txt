@@ -1,0 +1,96 @@
+def qr(tridiag_matrix, tol=10**-9, miter=10000):
+    """"
+    Algorithm to calculate eigenvalues of symmetric n x n tridiagonal matrix (given by Householder transform)
+
+    a: main diagonal
+    b: upper diagonal
+    s: second upper diagonal
+    """
+    matrix = np.copy(tridiag_matrix)
+    n = np.shape(matrix)[0]
+    a = np.array([matrix[i][i] for i in range(n)])
+    b = [matrix[i+1][i] for i in range(n-1)]
+    b.insert(0, 0) # Try and fix dimension?
+
+    # k = 0 #
+    shift = 0
+    lam = []
+    for k in range(1, miter):
+        if k == miter - 1:
+            raise StopIteration("Maximum number of iterations exceeded")
+        if np.abs(b[n-1]) <= tol:
+            lam.append(a[n-1] + shift)  # TODO: OUTPUT LAMBDA
+            n -= 1
+        if np.abs(b[1]) <= tol:  # TODO: Pazi ker se indeksi tu zacnejo z 0 tam pa z 1
+            lam.append(a[0] + shift)  # TODO: OUTPUT LAMBDA
+            n -= 1
+            a[0] = a[1]
+            for j in range(1, n):
+                a[j] = a[j + 1]
+                b[j] = b[j + 1]
+        if n == 0:  # Exit condition, all eigenvalues found
+            break
+        elif n == 1:
+            lam.append(a[0] + shift)  # TODO: OUTPUT LAMBDA
+            break
+        for j in range(2, n-1):
+            if np.abs(b[j]) <= tol:
+                print("Split into: {}, {} and {}, {} with shift: {}".format(j-1, j-1, j, j+1, shift))  # Really needed?
+                break
+
+        # Shift compute
+        o = -(a[n-2] + a[n-1])
+        c = a[n-1]*a[n-2] - b[n-1]**2
+        d = np.sqrt(o**2 - 4*c)
+        if o > 0:
+            mu1 = -2*c/(o + d)
+            mu2 = -(o + d)/2
+        else:
+            mu1 = (d - o)/2
+            mu2 = 2*c/(d - o)
+        if n == 2:  # Exit condition, two at once possible
+            lam.append(mu1 + shift)  # TODO: OUTPUT LAMBDA
+            lam.append(mu2 + shift)  # TODO: OUTPUT LAMBDA
+            break
+        if np.abs(mu1 - a[n-1]) > np.abs(mu2 - a[n-1]):
+            sigma = mu2
+        else:
+            sigma = mu1
+        shift += sigma
+
+        # Perform shift
+        e = [a[j] - sigma for j in range(n)]
+        x = [e[0]]
+        y = [b[1]]  # Not sure of this step
+        c = []
+        sigma = []
+        q = []
+        r = []
+        for j in range(1, n):
+            # z[j-1] = np.sqrt(x[j-1]**2 + b[j]**2)  # x not iterable?
+            z = [a[i][i] for i in range(k-1)]
+            # q = [a[i+1][i] for i in range(k-1)]
+            s = [a[i+2][i] for i in range(k-1)]  # Second diagonal items
+            s.insert(0, 0)  # Try and fix dimensions
+            s.insert(1, 0)
+            z.append(np.sqrt(x[j-1]**2 + b[j]**2))
+            c.append(x[j-1]/z[j-1])
+            sigma.append(b[j]/z[j-1])
+            q.append(c[j]*y[j] + s[j]*e[j])
+            x.append(-sigma[j]*y[j] + c[j]*e[j])
+            if j != n:
+                r.append(sigma[j]*b[j+1])
+                y[j] = c[j] * b[j+1]
+
+        # Compute A^(k+1)
+        z[n-1] = x[n-1]
+        a_new = [sigma[2]*q[1] + c[2]*z[1]]
+        b_new = [sigma[2]*z[2]]
+        for j in range(1, n-1):
+            a_new.append(sigma[j+1]*q[j] + c[j]*c[j+1]*z[j])
+            b_new.append(sigma[j+1]*z[j+1])
+
+        a_new.append(c[n] * z[n])  # a_n = c_n z_n
+        a = a_new
+
+    return np.diag(lam)
