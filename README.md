@@ -1,6 +1,3 @@
----
-title: MFP DN3
----
 # DN 3. Lastne vrednosti in lastni vektorji (Diagonalizacija za anharmoničen oscilator)
 
 Cannot stress this enough, diagonalizacija matrik je ena najpomembnejših stvari v fiziki. Z diagonalizacijo matrike poiščemo njene lastne vrednosti in lastne vektorje. V tej nalogi se naučiš prav to in kako se potem to uporabi za reševanje Schrödingerjeve enačbe za anharmoničen oscilator.
